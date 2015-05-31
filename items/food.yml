@@ -1,0 +1,31 @@
+﻿food:
+  inherits:
+    - "apple"
+    - "melon"
+    - "pork"
+    - "beef"
+    
+apple:
+  type: APPLE
+  chance: 100
+  
+melon:
+  type: MELON
+  chance: 200
+  
+pork:
+  type: PORK
+  chance: 40
+  
+beef:
+  inherits:
+    - "raw_beef"
+    - "cooked_beed"
+    
+raw_beef:
+  type: RAW_BEEF
+  chance: 30
+  
+cooked_beef:
+  type: COOKED_BEEF
+  chance: 20

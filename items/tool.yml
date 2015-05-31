@@ -1,0 +1,122 @@
+﻿tool:
+  inherits:
+    - "axe"
+    - "pickaxe"
+    - "shovel"
+    - "hoe"
+
+#axe
+axe:
+  inherits:
+    - "wood_axe"
+    - "stone_axe"
+    - "iron_axe"
+    - "gold_axe"
+    - "diamond_axe"
+
+wood_axe:
+  type: WOOD_AXE
+  chance: 500
+  
+stone_axe:
+  type: STONE_AXE
+  chance: 400
+  
+iron_axe:
+  type: IRON_AXE
+  chance: 300
+  
+gold_axe:
+  type: GOLD_AXE
+  chance: 200
+  
+diamond_axe:
+  type: DIAMOND_AXE
+  chance: 100
+  
+#pickaxe
+pickaxe:
+  inherits:
+    - "wood_pickaxe"
+    - "stone_pickaxe"
+    - "iron_pickaxe"
+    - "gold_pickaxe"
+    - "diamond_pickaxe"
+    
+wood_pickaxe:
+  type: WOOD_PICKAXE
+  chance: 500
+  
+stone_pickaxe:
+  type: STONE_PICKAXE
+  chance: 400
+  
+iron_pickaxe:
+  type: IRON_PICKAXE
+  chance: 300
+  
+gold_pickaxe:
+  type: GOLD_PICKAXE
+  chance: 200
+  
+diamond_pickaxe:
+  type: DIAMOND_PICKAXE
+  chance: 100
+  
+#shovel
+shovel:
+  inherits:
+    - "wood_shovel"
+    - "stone_shovel"
+    - "iron_shovel"
+    - "gold_shovel"
+    - "diamond_shovel"
+    
+wood_shovel:
+  type: WOOD_SHOVEL
+  chance: 500
+  
+stone_shovel:
+  type: STONE_SHOVEL
+  chance: 400
+  
+iron_shovel:
+  type: IRON_SHOVEL
+  chance: 300
+  
+gold_shovel:
+  type: GOLD_SHOVEL
+  chance: 200
+  
+diamond_shovel:
+  type: DIAMOND_SHOVEL
+  chance: 100
+  
+#hoe
+hoe:
+  inherits:
+    - "wood_hoe"
+    - "stone_hoe"
+    - "iron_hoe"
+    - "gold_hoe"
+    - "diamond_hoe"
+    
+wood_hoe:
+  type: WOOD_HOE
+  chance: 500
+  
+stone_hoe:
+  type: STONE_HOE
+  chance: 400
+  
+iron_hoe:
+  type: IRON_HOE
+  chance: 300
+  
+gold_hoe:
+  type: GOLD_HOE
+  chance: 200
+  
+diamond_hoe:
+  type: DIAMOND_HOE
+  chance: 100

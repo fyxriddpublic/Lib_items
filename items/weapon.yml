@@ -1,0 +1,36 @@
+﻿weapon:
+  inherits:
+    - "bow"
+    - "sword"
+
+bow:
+  type: BOW
+  chance: 200
+
+sword:
+  inherits:
+    - "wood_sword"
+    - "stone_sword"
+    - "iron_sword"
+    - "gold_sword"
+    - "diamond_sword"
+
+wood_sword:
+  type: WOOD_SWORD
+  chance: 500
+
+stone_sword:
+  type: STONE_SWORD
+  chance: 400
+
+iron_sword:
+  type: IRON_SWORD
+  chance: 200
+
+gold_sword:
+  type: GOLD_SWORD
+  chance: 150
+  
+diamond_sword:
+  type: DIAMOND_SWORD
+  chance: 100

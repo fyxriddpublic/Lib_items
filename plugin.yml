@@ -1,0 +1,5 @@
+﻿name: Lib_items
+main: lib.items.api.ItemsPlugin
+version: 1.0
+depend: [Lib_core]
+softdepend:

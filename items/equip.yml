@@ -1,0 +1,35 @@
+﻿equip:
+  inherits:
+    - "head"
+    - "chest"
+    - "leg"
+    - "foot"
+
+#head
+head:
+  inherits:
+    - "leather_helmet"
+    - "chainmail_helmet"
+    - "iron_helmet"
+    - "gold_helmet"
+    - "diamond_helmet"
+
+leather_helmet:
+  type: LEATHER_HELMET
+  chance: 500
+
+chainmail_helmet:
+  type: CHAINMAIL_HELMET
+  chance: 100
+
+iron_helmet:
+  type: IRON_HELMET
+  chance: 300
+
+gold_helmet:
+  type: GOLD_HELMET
+  chance: 200
+
+diamond_helmet:
+  type: DIAMOND_HELMET
+  chance: 100
