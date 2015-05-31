@@ -14,5 +14,5 @@ description:
 #################################
 #####         配置          #####
 #################################
-per: "items.admin"            #物品管理权限
-editPer: "items.edit"        #物品编辑权限
+per: "lib.items.admin"        #物品管理权限
+editPer: "lib.items.edit"     #物品编辑权限
