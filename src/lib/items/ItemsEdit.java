@@ -2,6 +2,7 @@ package lib.items;
 
 import lib.core.api.*;
 import lib.core.api.event.ReloadConfigEvent;
+import lib.core.api.inter.FancyMessage;
 import lib.core.api.inter.FunctionInterface;
 import lib.items.api.ItemsPlugin;
 import org.bukkit.Bukkit;
@@ -56,37 +57,37 @@ public class ItemsEdit implements Listener,FunctionInterface {
         return PerApi.has(name, editPer);
     }
 
-    @Override
-    public void setOn(String name, String subFunc, boolean on) {
-        if (on) PerApi.add(name, editPer);
-        else PerApi.del(name, editPer);
-    }
-
     /**
      * 'a true/false' 打开物品编辑框,true/false表示是否重置
      * 'b 类型名 true/false' 保存类型,true/false表示是否强制保存
-     * @param p 操作的玩家,不为null
-     * @param data 操作的数据,可为null
      */
     @Override
-    public void onOperate(Player p, String data) {
-        if (data != null) {
-            String[] args = data.split(" ");
-            switch (args.length) {
-                case 2:
-                    if (args[0].equalsIgnoreCase("a")) {
-                        boolean newInv = Boolean.parseBoolean(args[1]);
-                        open(p, newInv);
-                    }
-                    break;
-                case 3:
-                    if (args[0].equalsIgnoreCase("b")) {
-                        String type = args[1];
-                        boolean force = Boolean.parseBoolean(args[2]);
-                        save(p, type, force);
-                    }
-                    break;
+    public void onOperate(Player p, String... args) {
+        if (args.length > 0) {
+            try {
+                switch (args.length) {
+                    case 2:
+                        if (args[0].equalsIgnoreCase("a")) {
+                            boolean newInv = Boolean.parseBoolean(args[1]);
+                            open(p, newInv);
+                            return;
+                        }
+                        break;
+                    case 3:
+                        if (args[0].equalsIgnoreCase("b")) {
+                            String type = args[1];
+                            boolean force = Boolean.parseBoolean(args[2]);
+                            save(p, type, force);
+                            return;
+                        }
+                        break;
+                }
+            } catch (Exception e) {//操作异常
+                ShowApi.tip(p, get(5), true);
+                return;
             }
+            //输入格式错误
+            ShowApi.tip(p, get(10), true);
         }
     }
 
@@ -161,4 +162,8 @@ public class ItemsEdit implements Listener,FunctionInterface {
         //editPer
         editPer = config.getString("editPer");
 	}
+
+    private FancyMessage get(int id, Object... args) {
+        return FormatApi.get(ItemsPlugin.pn, id, args);
+    }
 }
