@@ -1,5 +1,5 @@
 ﻿name: Lib_items
 main: com.fyxridd.lib.items.api.ItemsPlugin
-version: 1.1
+version: 1.1.0
 depend: [Lib_core]
 softdepend:

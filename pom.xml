@@ -6,7 +6,7 @@
 
     <groupId>com.fyxridd</groupId>
     <artifactId>Lib_items</artifactId>
-    <version>1.1</version>
+    <version>1.1.0</version>
 
     <build>
         <!--默认插件-->
