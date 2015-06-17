@@ -1,10 +1,10 @@
-package lib.items;
+package com.fyxridd.lib.items;
 
-import lib.core.api.*;
-import lib.core.api.event.ReloadConfigEvent;
-import lib.core.api.inter.FancyMessage;
-import lib.core.api.inter.FunctionInterface;
-import lib.items.api.ItemsPlugin;
+import com.fyxridd.lib.core.api.*;
+import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
+import com.fyxridd.lib.core.api.inter.FancyMessage;
+import com.fyxridd.lib.core.api.inter.FunctionInterface;
+import com.fyxridd.lib.items.api.ItemsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -92,7 +92,7 @@ public class ItemsEdit implements Listener,FunctionInterface {
     }
 
 	/**
-     * @see lib.items.api.ItemsApi#getInv(String, boolean)
+     * @see com.fyxridd.lib.items.api.ItemsApi#getInv(String, boolean)
 	 */
 	public static Inventory getInv(String name, boolean create) {
         if (name == null) return null;

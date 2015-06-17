@@ -1,4 +1,4 @@
-package lib.items;
+package com.fyxridd.lib.items;
 
 import org.bukkit.inventory.ItemStack;
 

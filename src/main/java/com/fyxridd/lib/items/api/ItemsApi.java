@@ -1,7 +1,7 @@
-package lib.items.api;
+package com.fyxridd.lib.items.api;
 
-import lib.items.ItemsEdit;
-import lib.items.ItemsMain;
+import com.fyxridd.lib.items.ItemsEdit;
+import com.fyxridd.lib.items.ItemsMain;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

@@ -1,7 +1,7 @@
-package lib.items;
+package com.fyxridd.lib.items;
 
-import lib.core.api.hashList.ChanceHashList;
-import lib.core.api.hashList.ChanceHashListImpl;
+import com.fyxridd.lib.core.api.hashList.ChanceHashList;
+import com.fyxridd.lib.core.api.hashList.ChanceHashListImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

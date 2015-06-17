@@ -1,8 +1,8 @@
-package lib.items.api;
+package com.fyxridd.lib.items.api;
 
-import lib.core.api.CoreApi;
-import lib.core.api.FormatApi;
-import lib.items.ItemsMain;
+import com.fyxridd.lib.core.api.CoreApi;
+import com.fyxridd.lib.core.api.FormatApi;
+import com.fyxridd.lib.items.ItemsMain;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

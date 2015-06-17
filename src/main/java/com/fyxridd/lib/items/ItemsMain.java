@@ -1,14 +1,14 @@
-package lib.items;
+package com.fyxridd.lib.items;
 
-import lib.core.api.ConfigApi;
-import lib.core.api.CoreApi;
-import lib.core.api.event.ReloadConfigEvent;
-import lib.core.api.hashList.HashList;
-import lib.core.api.hashList.HashListImpl;
-import lib.core.api.nbt.Attributes;
-import lib.items.GetInfo.GetItem;
-import lib.items.ItemInfo.InheritItem;
-import lib.items.api.ItemsPlugin;
+import com.fyxridd.lib.core.api.ConfigApi;
+import com.fyxridd.lib.core.api.CoreApi;
+import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
+import com.fyxridd.lib.core.api.hashList.HashList;
+import com.fyxridd.lib.core.api.hashList.HashListImpl;
+import com.fyxridd.lib.core.api.nbt.Attributes;
+import com.fyxridd.lib.items.GetInfo.GetItem;
+import com.fyxridd.lib.items.ItemInfo.InheritItem;
+import com.fyxridd.lib.items.api.ItemsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
@@ -54,7 +54,7 @@ public class ItemsMain implements Listener{
 	}
 
     /**
-     * @see lib.items.api.ItemsApi#saveItem(org.bukkit.inventory.ItemStack)
+     * @see com.fyxridd.lib.items.api.ItemsApi#saveItem(org.bukkit.inventory.ItemStack)
      */
     public static String saveItem(ItemStack is) {
         if (is == null) return null;
@@ -69,7 +69,7 @@ public class ItemsMain implements Listener{
     }
 
     /**
-     * @see lib.items.api.ItemsApi#loadItem(String)
+     * @see com.fyxridd.lib.items.api.ItemsApi#loadItem(String)
      */
     public static ItemStack loadItem(String s) {
         if (s == null) return null;
@@ -85,7 +85,7 @@ public class ItemsMain implements Listener{
     }
 
     /**
-     * @see lib.items.api.ItemsApi#saveItemStack(org.bukkit.configuration.MemorySection, String, org.bukkit.inventory.ItemStack)
+     * @see com.fyxridd.lib.items.api.ItemsApi#saveItemStack(org.bukkit.configuration.MemorySection, String, org.bukkit.inventory.ItemStack)
      */
     public static void saveItemStack(MemorySection ms, String type, ItemStack is) {
         if (ms == null || type == null || is == null) return;
@@ -109,7 +109,7 @@ public class ItemsMain implements Listener{
     }
 
     /**
-     * @see lib.items.api.ItemsApi#loadItemStack(org.bukkit.configuration.MemorySection)
+     * @see com.fyxridd.lib.items.api.ItemsApi#loadItemStack(org.bukkit.configuration.MemorySection)
      */
     public static ItemStack loadItemStack(MemorySection ms) {
         if (ms == null) return null;
@@ -194,7 +194,7 @@ public class ItemsMain implements Listener{
 	}
 
 	/**
-     * @see lib.items.api.ItemsApi#reloadItems(String, org.bukkit.configuration.MemorySection)
+     * @see com.fyxridd.lib.items.api.ItemsApi#reloadItems(String, org.bukkit.configuration.MemorySection)
 	 */
 	public static void reloadItems(String plugin, MemorySection ms) {
         if (plugin == null || ms == null) return;
