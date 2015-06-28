@@ -6,7 +6,7 @@
 
     <groupId>com.fyxridd</groupId>
     <artifactId>Lib_items</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <build>
         <!--默认插件-->
@@ -38,11 +38,18 @@
         <!--资源-->
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>./</directory>
                 <targetPath>./</targetPath>
                 <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.xml</include>
+                    <include>plugin.yml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>resources</targetPath>
+                <includes>
+                    <include>**/*</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
@@ -148,7 +155,7 @@
         <dependency>
             <groupId>com.fyxridd</groupId>
             <artifactId>Lib_core</artifactId>
-            <version>1.4.0</version>
+            <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

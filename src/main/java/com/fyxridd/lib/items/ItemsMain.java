@@ -458,13 +458,7 @@ public class ItemsMain implements Listener{
 	}
 
     private void initConfig() {
-        List<String> filter = ConfigApi.getDefaultFilter();
-        filter.add("items/default.yml");
-        filter.add("items/equip.yml");
-        filter.add("items/food.yml");
-        filter.add("items/tool.yml");
-        filter.add("items/weapon.yml");
-        ConfigApi.register(ItemsPlugin.file, ItemsPlugin.dataPath, filter, ItemsPlugin.pn, null);
+        ConfigApi.register(ItemsPlugin.file, ItemsPlugin.dataPath, ItemsPlugin.pn, null);
         ConfigApi.loadConfig(ItemsPlugin.pn);
     }
 
