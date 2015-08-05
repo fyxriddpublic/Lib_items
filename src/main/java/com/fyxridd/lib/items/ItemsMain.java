@@ -353,7 +353,7 @@ public class ItemsMain implements Listener{
 			}else {//方式二
 				ItemStack is = loadItemStack(ms);
 				if (is == null) return null;
-				int chance = ms.getInt("chance");
+				int chance = ms.getInt("chance", 1);
 				ItemWrapper iw = new ItemWrapper(is);
 				return new ItemInfo(type, chance, iw);
 			}
