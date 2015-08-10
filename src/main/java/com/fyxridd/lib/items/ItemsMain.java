@@ -25,13 +25,12 @@ public class ItemsMain implements Listener{
 	private static Random r = new Random();
 	
 	//插件名 获取类型名 获取类型
-	private static HashMap<String, HashMap<String, GetInfo>> getHash = new HashMap<String, HashMap<String,GetInfo>>();
+	private static HashMap<String, HashMap<String, GetInfo>> getHash = new HashMap<>();
 	//插件名 文件名 物品类型名 物品类型
-	private static HashMap<String, HashMap<String, HashMap<String, ItemInfo>>> itemHash =
-			new HashMap<String, HashMap<String, HashMap<String, ItemInfo>>>();
+	private static HashMap<String, HashMap<String, HashMap<String, ItemInfo>>> itemHash = new HashMap<>();
 	
 	//'plugin:file:type'
-	private static HashList<String> loading = new HashListImpl<String>();
+	private static HashList<String> loading = new HashListImpl<>();
 
 	public ItemsMain() {
         //初始化配置

@@ -30,7 +30,7 @@ public class ItemsEdit implements Listener,FunctionInterface {
 
     //缓存
     //玩家名 物品编辑框
-	private static HashMap<String, Inventory> invHash = new HashMap<String, Inventory>();
+	private static HashMap<String, Inventory> invHash = new HashMap<>();
 
 	public ItemsEdit() {
 		savePath = ItemsPlugin.dataPath+File.separator+"saveItems";
