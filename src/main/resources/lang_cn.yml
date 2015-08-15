@@ -7,3 +7,38 @@ show-50: "&c当前物品编辑框里没有物品."
 show-55: "&c物品类型&3{0}&c已经存在(可以强制保存)"
 show-60: "&a保存成功."
 show-65: "&c保存失败."
+show-100: "&e打开物品编辑框,重置: <0>  <1>  <2>"
+info-100:
+  0:
+    text: " {reset} "
+    color: "d"
+    formats: "n"
+    onClick: "cmd /f tm b reset"
+  1:
+    text: "[确认]"
+    color: "a"
+    onClick: "cmd /f tm a"
+  2:
+    text: "[取消]"
+    color: "7"
+    onClick: "cmd /f tm c"
+show-110: "&e保存名:<0>&e,是否强制保存:<1>  <2>  <3>"
+info-110:
+  0:
+    text: " {name} "
+    color: "d"
+    formats: "n"
+    onClick: "cmd /f tm b name"
+  1:
+    text: " {force} "
+    color: "d"
+    formats: "n"
+    onClick: "cmd /f tm b force"
+  2:
+    text: "[确认]"
+    color: "a"
+    onClick: "cmd /f tm a"
+  3:
+    text: "[取消]"
+    color: "7"
+    onClick: "cmd /f tm c"
