@@ -144,7 +144,7 @@ public class ItemsMain implements Listener{
 	 * @return 检测成功的物品列表,出错返回空列表
 	 */
 	public static List<ItemStack> getItems(String plugin, String type) {
-		List<ItemStack> result = new ArrayList<ItemStack>();
+		List<ItemStack> result = new ArrayList<>();
         if (plugin == null || type == null) return result;
 
 		GetInfo getInfo = getGetInfo(plugin, type);
@@ -245,7 +245,7 @@ public class ItemsMain implements Listener{
 		//清空旧的
 		itemHash.remove(plugin);
 		//读取新的
-		HashMap<String, HashMap<String,ItemInfo>> fileHash = new HashMap<String, HashMap<String,ItemInfo>>();
+		HashMap<String, HashMap<String,ItemInfo>> fileHash = new HashMap<>();
 		for (File f:file.listFiles()) {
 			if (f.isFile() && f.canRead() && f.getName().endsWith(".yml")) {
 				String fileName = f.getName().substring(0, f.getName().length()-4).trim();

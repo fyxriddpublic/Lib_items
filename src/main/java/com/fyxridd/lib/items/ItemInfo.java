@@ -35,15 +35,15 @@ public class ItemInfo {
 	//物品类型名
 	private String name;
 	//继承列表,不为null可为空(方式一时不为空,方式二时为空)
-	private List<InheritItem> inherits = new ArrayList<InheritItem>();
+	private List<InheritItem> inherits = new ArrayList<>();
 	//几率
 	private int chance;
 	//物品(方式一时为null,方式二时不为null)
 	private ItemWrapper iw;
 	//物品列表,不为null,为空说明未生成物品列表
-	private ChanceHashList<ItemWrapper> itemList = new ChanceHashListImpl<ItemWrapper>();
+	private ChanceHashList<ItemWrapper> itemList = new ChanceHashListImpl<>();
 	//其它属性,不为null
-	private HashMap<String, Object> properties = new HashMap<String, Object>();
+	private HashMap<String, Object> properties = new HashMap<>();
 
 	public ItemInfo(String name, List<InheritItem> inherits) {
 		super();
@@ -102,7 +102,7 @@ public class ItemInfo {
 			ItemInfo info = ItemsMain.getItemInfo(ii.plugin, ii.file, ii.type);
 			if (info.getItemList().isEmpty()) info.generateItemWrappers();
 			ChanceHashList<ItemWrapper> list = info.getItemList().clone();
-			list.updateTotalChance(ii.tarChance);
+            if (ii.tarChance != -1) list.updateTotalChance(ii.tarChance);
 			this.itemList.convert(list, false);
 		}
 		//本身
