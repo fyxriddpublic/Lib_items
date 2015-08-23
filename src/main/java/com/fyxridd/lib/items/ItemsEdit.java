@@ -111,6 +111,8 @@ public class ItemsEdit implements Listener,FunctionInterface {
 	 * @param newInv true表示重置物品编辑框
 	 */
 	private static void open(Player p, boolean newInv) {
+        //检测权限
+        if (!PerApi.checkPer(p, editPer)) return;
 		//检测新建物品编辑框
 		String name = p.getName();
 		if (!invHash.containsKey(name) || newInv)
@@ -127,6 +129,8 @@ public class ItemsEdit implements Listener,FunctionInterface {
 	 * @param force true表示强制保存(如果原来有文件则覆盖)
 	 */
 	private static void save(Player p, String type, boolean force) {
+        //检测权限
+        if (!PerApi.checkPer(p, editPer)) return;
 		//物品编辑框里没有物品
 		String name = p.getName();
 		if (!invHash.containsKey(name) || ItemApi.getEmptySlots(invHash.get(name)) == invHash.get(name).getSize()) {
