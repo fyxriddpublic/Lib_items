@@ -5,7 +5,6 @@ import com.fyxridd.lib.core.api.CoreApi;
 import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
 import com.fyxridd.lib.core.api.hashList.HashList;
 import com.fyxridd.lib.core.api.hashList.HashListImpl;
-import com.fyxridd.lib.core.api.nbt.Attributes;
 import com.fyxridd.lib.items.GetInfo.GetItem;
 import com.fyxridd.lib.items.ItemInfo.InheritItem;
 import com.fyxridd.lib.items.api.ItemsPlugin;
@@ -76,8 +75,7 @@ public class ItemsMain implements Listener{
         try {
             YamlConfiguration config = new YamlConfiguration();
             config.loadFromString(s);
-            ItemStack is = loadItemStack((MemorySection) config.get("item"));
-            return is;
+            return loadItemStack((MemorySection) config.get("item"));
         } catch (Exception e) {
             return null;
         }
@@ -89,22 +87,7 @@ public class ItemsMain implements Listener{
     public static void saveItemStack(MemorySection ms, String type, ItemStack is) {
         if (ms == null || type == null || is == null) return;
 
-        try {
-            if (!is.getType().equals(Material.AIR) && is.getAmount() > 0) {
-                ms.createSection(type, is.serialize());
-                //保存Attributes
-                Attributes a = new Attributes(is);
-                for (int index=0;index<a.size();index++) {
-                    Attributes.Attribute at = a.get(index);
-                    ms.set(type+".ats.at"+index+".amount", at.getAmount());
-                    ms.set(type+".ats.at"+index+".type", at.getAttributeType().getMinecraftId());
-                    ms.set(type+".ats.at"+index+".name", at.getName());
-                    ms.set(type+".ats.at"+index+".op", at.getOperation().getId());
-                    ms.set(type+".ats.at"+index+".uuid", at.getUUID().toString());
-                }
-            }
-        } catch (Exception e) {
-        }
+        if (!is.getType().equals(Material.AIR) && is.getAmount() > 0) ms.createSection(type, is.serialize());
     }
 
     /**
@@ -114,24 +97,7 @@ public class ItemsMain implements Listener{
         if (ms == null) return null;
 
         try {
-            ItemStack is = ItemStack.deserialize(ms.getValues(true));
-            if (is != null) {
-                //读取attributes
-                if (ms.contains("ats")) {
-                    Attributes a = new Attributes(is);
-                    for (String key: ((MemorySection)ms.get("ats")).getValues(false).keySet()) {
-                        Attributes.Attribute.Builder b = Attributes.Attribute.newBuilder();
-                        if (ms.contains("ats."+key+".uuid")) b.uuid(UUID.fromString(ms.getString("ats." + key + ".uuid")));
-                        if (ms.contains("ats."+key+".amount")) b.amount(ms.getInt("ats."+key+".amount"));
-                        if (ms.contains("ats."+key+".name")) b.name(ms.getString("ats."+key+".name"));
-                        if (ms.contains("ats."+key+".op")) b.operation(Attributes.Operation.fromId(ms.getInt("ats." + key + ".op")));
-                        if (ms.contains("ats."+key+".type")) b.type(Attributes.AttributeType.fromId(ms.getString("ats." + key + ".type")));
-                        a.add(b.build());
-                    }
-                    is = a.getStack();
-                }
-            }
-            return is;
+            return ItemStack.deserialize(ms.getValues(true));
         } catch (Exception e) {
             return null;
         }
@@ -276,7 +242,7 @@ public class ItemsMain implements Listener{
 	 * @return 异常返回空的hash
 	 */
 	private static HashMap<String, ItemInfo> loadItemInfo(String plugin, File file, String fileName) {
-		HashMap<String,ItemInfo> typeHash = new HashMap<String,ItemInfo>();
+		HashMap<String,ItemInfo> typeHash = new HashMap<>();
 		try {
 			YamlConfiguration config = CoreApi.loadConfigByUTF8(file);
 			for (String type:config.getValues(false).keySet()) {
