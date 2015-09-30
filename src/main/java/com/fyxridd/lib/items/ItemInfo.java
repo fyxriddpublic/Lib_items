@@ -116,10 +116,9 @@ public class ItemInfo {
 	@Override
 	public ItemInfo clone() {
 		try {
-			ChanceHashList<ItemWrapper> list = new ChanceHashListImpl<ItemWrapper>();
-			for (ItemWrapper i:itemList) list.add(i.clone());
-			ItemInfo result = new ItemInfo(name, inherits, chance, iw, list, properties);
-			return result;
+			ChanceHashList<ItemWrapper> list = new ChanceHashListImpl<>();
+			for (ItemWrapper i:itemList) list.addChance(i.clone(), itemList.getChance(i));
+			return new ItemInfo(name, inherits, chance, iw, list, properties);
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}

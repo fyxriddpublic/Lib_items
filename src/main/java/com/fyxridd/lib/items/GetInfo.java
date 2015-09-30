@@ -50,7 +50,7 @@ public class GetInfo {
 			this.maxAmount = maxAmount;
 			this.itemInfo = itemInfo;
 			//计算更新几率
-			itemInfo.getItemList().updateTotalChance(tarChance);
+			if (method == 2) itemInfo.getItemList().updateTotalChance(tarChance);
 		}
 		
 	}

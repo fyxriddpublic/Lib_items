@@ -3,6 +3,7 @@ package com.fyxridd.lib.items;
 import com.fyxridd.lib.core.api.ConfigApi;
 import com.fyxridd.lib.core.api.CoreApi;
 import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
+import com.fyxridd.lib.core.api.hashList.ChanceHashList;
 import com.fyxridd.lib.core.api.hashList.HashList;
 import com.fyxridd.lib.core.api.hashList.HashListImpl;
 import com.fyxridd.lib.items.GetInfo.GetItem;
@@ -116,7 +117,7 @@ public class ItemsMain implements Listener{
 		GetInfo getInfo = getGetInfo(plugin, type);
 		if (getInfo == null) return result;
 		for (GetItem getItem:getInfo.getList()) {
-			ItemInfo itemInfo = getItemInfo(getItem.plugin, getItem.file, getItem.type);
+			ItemInfo itemInfo = getItem.itemInfo;
 			if (itemInfo != null && !itemInfo.getItemList().isEmpty()) {//不为null且有内容
 				if (getItem.method == 1) {//方式一
 					int times = r.nextInt(getItem.maxTimes-getItem.minTimes+1)+getItem.minTimes;
@@ -126,13 +127,13 @@ public class ItemsMain implements Listener{
 							result.add(is);
 						}
 					}else {//不重复取
-						HashList<ItemWrapper> hasGetList = new HashListImpl<ItemWrapper>();
+                        ChanceHashList<ItemWrapper> list = itemInfo.getItemList().clone();
 						for (int i=0;i<times;i++) {
-							ItemWrapper iw = itemInfo.getItemList().getRandom();
-							if (hasGetList.has(iw)) continue;//不能重复
-							hasGetList.add(iw);
-							ItemStack is = iw.getItem().clone();
-							result.add(is);
+							ItemWrapper iw = list.getRandom();
+                            list.remove(iw);
+							result.add(iw.getItem().clone());
+                            //已经没有物品了
+                            if (list.isEmpty()) break;
 						}
 					}
 				}else {//方式二
@@ -417,9 +418,8 @@ public class ItemsMain implements Listener{
 		} catch (NumberFormatException e) {
 			return null;//异常
 		}
-		GetItem getItem = new GetItem(pn, file, type, method, all, minTimes, 
-				maxTimes, tarChance, maxChance, minAmount, maxAmount, itemInfo);
-		return getItem;
+		return new GetItem(pn, file, type, method, all, minTimes,
+                maxTimes, tarChance, maxChance, minAmount, maxAmount, itemInfo);
 	}
 
     private void initConfig() {
