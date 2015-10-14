@@ -1,0 +1,24 @@
+#配置变量: 无
+open:
+  instant: false
+  maps:
+    - "reset false"
+  recommends:
+    - "reset 1 false,true"
+  key: "reset"
+  tips:
+    - "100"
+  cmd: "/f ie a {reset}"
+
+#配置变量: 无
+save:
+  instant: false
+  maps:
+    - "saveName"
+    - "force false"
+  recommends:
+    - "force 1 false,true"
+  key: "saveName"
+  tips:
+    - "110"
+  cmd: "/f ie b {saveName} {force}"

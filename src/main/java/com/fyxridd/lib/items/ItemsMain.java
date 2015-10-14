@@ -2,6 +2,7 @@ package com.fyxridd.lib.items;
 
 import com.fyxridd.lib.core.api.ConfigApi;
 import com.fyxridd.lib.core.api.CoreApi;
+import com.fyxridd.lib.core.api.TransactionApi;
 import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
 import com.fyxridd.lib.core.api.hashList.ChanceHashList;
 import com.fyxridd.lib.core.api.hashList.HashList;
@@ -47,8 +48,6 @@ public class ItemsMain implements Listener{
 	public void onReloadConfig(ReloadConfigEvent e) {
 		if (e.getPlugin().equals(ItemsPlugin.pn)) {
             loadConfig();
-            //重新读取物品配置
-            reloadItems(ItemsPlugin.pn, ConfigApi.getConfig(ItemsPlugin.pn));
         }
 	}
 
@@ -432,5 +431,7 @@ public class ItemsMain implements Listener{
 
         //重新读取物品配置
         reloadItems(ItemsPlugin.pn, config);
+        //重新读取提示
+        TransactionApi.reloadTips(ItemsPlugin.pn, new File(ItemsPlugin.dataPath, "tips.yml"));
 	}
 }

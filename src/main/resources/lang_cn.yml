@@ -25,10 +25,10 @@ info-100:
 show-110: "&e保存名:<0>&e,是否强制保存:<1>  <2>  <3>"
 info-110:
   0:
-    text: " {name} "
+    text: " {saveName} "
     color: "d"
     formats: "n"
-    onClick: "cmd /f tm b name"
+    onClick: "cmd /f tm b saveName"
   1:
     text: " {force} "
     color: "d"
