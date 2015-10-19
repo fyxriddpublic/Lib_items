@@ -422,7 +422,7 @@ public class ItemsMain implements Listener{
 	}
 
     private void initConfig() {
-        ConfigApi.register(ItemsPlugin.file, ItemsPlugin.dataPath, ItemsPlugin.pn, null);
+        ConfigApi.register(ItemsPlugin.file, ItemsPlugin.dataPath, ItemsPlugin.pn);
         ConfigApi.loadConfig(ItemsPlugin.pn);
     }
 
