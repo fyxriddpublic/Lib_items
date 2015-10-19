@@ -432,6 +432,6 @@ public class ItemsMain implements Listener{
         //重新读取物品配置
         reloadItems(ItemsPlugin.pn, config);
         //重新读取提示
-        TransactionApi.reloadTips(ItemsPlugin.pn, new File(ItemsPlugin.dataPath, "tips.yml"));
+        TransactionApi.reloadTips(ItemsPlugin.pn);
 	}
 }
