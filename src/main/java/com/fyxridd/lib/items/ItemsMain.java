@@ -147,7 +147,7 @@ public class ItemsMain implements Listener{
 						left --;
 						if (sum >= getItem.maxAmount) break;//已经达到最大数量
 						int chance = itemInfo.getItemList().getChance(iw);
-						if (must || (chance > 0 && r.nextInt(chance) < getItem.maxChance)) {
+						if (must || (chance > 0 && r.nextInt(getItem.maxChance) < chance)) {
 							sum ++;
 							result.add(iw.getItem().clone());
 						}
