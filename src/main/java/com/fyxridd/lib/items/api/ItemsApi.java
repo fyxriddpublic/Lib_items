@@ -2,6 +2,7 @@ package com.fyxridd.lib.items.api;
 
 import com.fyxridd.lib.items.ItemsEdit;
 import com.fyxridd.lib.items.ItemsMain;
+import com.fyxridd.lib.items.api.handler.GetItemsHandler;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -9,6 +10,29 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class ItemsApi{
+    /**
+     * (动态)
+     * 注册物品获取器
+     * @param plugin 插件(null时无效果)
+     * @param type (物品获取器)类型(null时无效果)
+     * @param getItemsHandler 物品获取器
+     */
+    public static void register(String plugin, String type, GetItemsHandler getItemsHandler) {
+        ItemsMain.getItemsManager.register(plugin, type, getItemsHandler);
+    }
+
+    /**
+     * (动态)
+     * 获取物品
+     * @param plugin 插件(null时返回空列表)
+     * @param type (物品获取器)类型(null时返回空列表)
+     * @param arg 变量,可为null
+     * @return 物品列表,不为null
+     */
+    public static List<ItemStack> getItems(String plugin, String type, String arg) {
+        return ItemsMain.getItemsManager.getItems(plugin, type, arg);
+    }
+
     /**
      * 重新读取指定插件的物品配置,包括:<br>
      *   - 物品类型: 保存在plugins/<b>plugin</b>/items文件夹下,文件名xxx.yml的都是<br>

@@ -24,12 +24,15 @@ import java.util.*;
 
 public class ItemsMain implements Listener{
 	private static Random r = new Random();
-	
+
+    public static GetItemsManager getItemsManager;
+    public static ItemsEdit itemsEdit;
+
 	//插件名 获取类型名 获取类型
 	private static HashMap<String, HashMap<String, GetInfo>> getHash = new HashMap<>();
 	//插件名 文件名 物品类型名 物品类型
 	private static HashMap<String, HashMap<String, HashMap<String, ItemInfo>>> itemHash = new HashMap<>();
-	
+
 	//'plugin:file:type'
 	private static HashList<String> loading = new HashListImpl<>();
 
@@ -38,10 +41,11 @@ public class ItemsMain implements Listener{
         initConfig();
 		//读取配置文件
 		loadConfig();
+
+        getItemsManager = new GetItemsManager();
+        itemsEdit = new ItemsEdit();
 		//注册事件
 		Bukkit.getPluginManager().registerEvents(this, ItemsPlugin.instance);
-        //ItemsEdit
-        new ItemsEdit();
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
@@ -279,7 +283,7 @@ public class ItemsMain implements Listener{
 			MemorySection ms = (MemorySection) config.get(type);
 			List<String> list = ms.getStringList("inherits");
 			boolean hasInherits = false;
-			List<InheritItem> inherits = new ArrayList<InheritItem>();
+			List<InheritItem> inherits = new ArrayList<>();
 			if (list != null) {
 				for (String s:list) {
 					String[] s1 = s.split(" ");
@@ -336,12 +340,12 @@ public class ItemsMain implements Listener{
 		//清空旧的
 		getHash.remove(plugin);
 		//读取新的
-		HashMap<String, GetInfo> hash = new HashMap<String, GetInfo>();
+		HashMap<String, GetInfo> hash = new HashMap<>();
 		if (ms != null) {
 			for (String key:ms.getValues(false).keySet()) {
 				List<String> list = ms.getStringList(key);
 				if (!list.isEmpty()) {
-					List<GetItem> itemList = new ArrayList<GetItem>();
+					List<GetItem> itemList = new ArrayList<>();
 					for (String s:list) {
 						GetItem getItem = loadGetItem(plugin, s);
 						if (getItem != null) itemList.add(getItem);
