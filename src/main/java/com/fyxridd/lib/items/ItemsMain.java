@@ -215,7 +215,7 @@ public class ItemsMain implements Listener{
 		//清空旧的
 		itemHash.remove(plugin);
 		//读取新的
-		HashMap<String, HashMap<String,ItemInfo>> fileHash = new HashMap<>();
+		HashMap<String, HashMap<String, ItemInfo>> fileHash = new HashMap<>();
 		for (File f:file.listFiles()) {
 			if (f.isFile() && f.canRead() && f.getName().endsWith(".yml")) {
 				String fileName = f.getName().substring(0, f.getName().length()-4).trim();
@@ -295,35 +295,29 @@ public class ItemsMain implements Listener{
 						tarChance = Integer.parseInt(s1[1]);
 					}
 					String[] ss = s1[0].split("\\:");
-					String p,f,t;
+					String f,t;
 					if (ss.length == 1) {
-						p = plugin;
 						f = file;
 						t = ss[0];
 					}else if (ss.length == 2) {
-						p = plugin;
 						f = ss[0];
 						t = ss[1];
-					}else if (ss.length == 3) {
-						p = ss[0];
-						f = ss[1];
-						t = ss[2];
 					}else continue;//异常
-					ItemInfo info = loadItemInfo(p, f, t);
+					ItemInfo info = loadItemInfo(plugin, f, t);
 					if (info == null) continue;
-					InheritItem ii = new InheritItem(p, f, t, tarChance);
+					InheritItem ii = new InheritItem(plugin, f, t, tarChance);
 					inherits.add(ii);
 					hasInherits = true;
 				}
 			}
 			if (hasInherits) {//方式一
-				ItemInfo itemInfo = new ItemInfo(type, inherits);
-				return itemInfo;
+				return new ItemInfo(type, inherits);
 			}else {//方式二
 				ItemStack is = loadItemStack(ms);
 				if (is == null) return null;
 				int chance = ms.getInt("chance", 1);
 				ItemWrapper iw = new ItemWrapper(is);
+                //返回
 				return new ItemInfo(type, chance, iw);
 			}
 		} catch (Exception e) {
@@ -333,8 +327,6 @@ public class ItemsMain implements Listener{
 	
 	/**
 	 * 重新读取此插件所有的获取类型
-	 * @param plugin
-	 * @param ms
 	 */
 	private static void reloadGetInfos(String plugin, MemorySection ms) {
 		//清空旧的
@@ -371,18 +363,13 @@ public class ItemsMain implements Listener{
 		if (ss.length != 2) return null;//异常
 
 		String[] sss = ss[0].split("\\:");
-		String pn, file, type;
+		String file, type;
 		if (sss.length == 2) {
-			pn = plugin;
 			file = sss[0];
 			type = sss[1];
-		}else if (sss.length == 3) {
-			pn = sss[0];
-			file = sss[1];
-			type = sss[2];
 		}else return null;//异常
 		//ItemInfo副本
-		ItemInfo itemInfo = getItemInfo(pn, file, type);
+		ItemInfo itemInfo = getItemInfo(plugin, file, type);
 		if (itemInfo == null) return null;//异常
 		itemInfo = itemInfo.clone();
 		if (itemInfo == null) return null;//异常
@@ -421,7 +408,7 @@ public class ItemsMain implements Listener{
 		} catch (NumberFormatException e) {
 			return null;//异常
 		}
-		return new GetItem(pn, file, type, method, all, minTimes,
+		return new GetItem(plugin, file, type, method, all, minTimes,
                 maxTimes, tarChance, maxChance, minAmount, maxAmount, itemInfo);
 	}
 

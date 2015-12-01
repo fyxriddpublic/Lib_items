@@ -8,11 +8,11 @@ import org.bukkit.inventory.ItemStack;
 public class ItemWrapper {
 	private ItemStack item;
 
-	public ItemWrapper(ItemStack item) {
-		this.item = item;
-	}
+    public ItemWrapper(ItemStack item) {
+        this.item = item;
+    }
 
-	public ItemStack getItem() {
+    public ItemStack getItem() {
 		return item;
 	}
 
