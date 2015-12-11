@@ -1,32 +1,26 @@
 package com.fyxridd.lib.items;
 
 import com.fyxridd.lib.core.api.*;
-import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
 import com.fyxridd.lib.core.api.inter.FancyMessage;
 import com.fyxridd.lib.core.api.inter.FunctionInterface;
+import com.fyxridd.lib.items.api.ItemsApi;
 import com.fyxridd.lib.items.api.ItemsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.HashMap;
 
-public class ItemsEdit implements Listener,FunctionInterface {
+public class ItemsEdit implements FunctionInterface {
     private static final String FUNC_NAME = "ItemsEdit";
     //物品编辑框大小
     private static final int SLOT = 36;
 
     private static String savePath;
-
-    //配置
-    private static String editPer;
 
     //缓存
     //玩家名 物品编辑框
@@ -34,19 +28,10 @@ public class ItemsEdit implements Listener,FunctionInterface {
 
 	public ItemsEdit() {
 		savePath = ItemsPlugin.dataPath+File.separator+"saveItems";
-		//读取配置文件
-		loadConfig();
-		//注册事件
-		Bukkit.getPluginManager().registerEvents(this, ItemsPlugin.instance);
         //注册功能
         FuncApi.register(this);
 	}
 	
-	@EventHandler(priority=EventPriority.LOW)
-	public void onReloadConfig(ReloadConfigEvent e) {
-		if (e.getPlugin().equals(ItemsPlugin.pn)) loadConfig();
-	}
-
     @Override
     public String getName() {
         return FUNC_NAME;
@@ -54,7 +39,7 @@ public class ItemsEdit implements Listener,FunctionInterface {
 
     @Override
     public boolean isOn(String name, String subFunc) {
-        return PerApi.has(name, editPer);
+        return PerApi.has(name, ItemsConfig.editPer);
     }
 
     /**
@@ -112,7 +97,7 @@ public class ItemsEdit implements Listener,FunctionInterface {
 	 */
 	private static void open(Player p, boolean newInv) {
         //检测权限
-        if (!PerApi.checkPer(p, editPer)) return;
+        if (!PerApi.checkPer(p, ItemsConfig.editPer)) return;
 		//检测新建物品编辑框
 		String name = p.getName();
 		if (!invHash.containsKey(name) || newInv)
@@ -130,7 +115,7 @@ public class ItemsEdit implements Listener,FunctionInterface {
 	 */
 	private static void save(Player p, String type, boolean force) {
         //检测权限
-        if (!PerApi.checkPer(p, editPer)) return;
+        if (!PerApi.checkPer(p, ItemsConfig.editPer)) return;
 		//物品编辑框里没有物品
 		String name = p.getName();
 		if (!invHash.containsKey(name) || ItemApi.getEmptySlots(invHash.get(name)) == invHash.get(name).getSize()) {
@@ -153,18 +138,11 @@ public class ItemsEdit implements Listener,FunctionInterface {
 			if (is != null &&
                     !is.getType().equals(Material.AIR) &&
                     is.getAmount() > 0) {//保存物品信息
-                ItemsMain.saveItemStack(saveConfig, ""+i, is);
+                ItemsApi.saveItemStack(saveConfig, "" + i, is);
 			}
 		}
         if (CoreApi.saveConfigByUTF8(saveConfig, file)) ShowApi.tip(p, FormatApi.get(ItemsPlugin.pn, 60), true);
         else ShowApi.tip(p, FormatApi.get(ItemsPlugin.pn, 65), true);
-	}
-
-	private static void loadConfig() {
-        YamlConfiguration config = ConfigApi.getConfig(ItemsPlugin.pn);
-
-        //editPer
-        editPer = config.getString("editPer");
 	}
 
     private FancyMessage get(int id, Object... args) {

@@ -2,29 +2,26 @@ package com.fyxridd.lib.items;
 
 import com.fyxridd.lib.core.api.ConfigApi;
 import com.fyxridd.lib.core.api.CoreApi;
-import com.fyxridd.lib.core.api.TransactionApi;
-import com.fyxridd.lib.core.api.event.ReloadConfigEvent;
 import com.fyxridd.lib.core.api.hashList.ChanceHashList;
 import com.fyxridd.lib.core.api.hashList.HashList;
 import com.fyxridd.lib.core.api.hashList.HashListImpl;
 import com.fyxridd.lib.items.GetInfo.GetItem;
 import com.fyxridd.lib.items.ItemInfo.InheritItem;
+import com.fyxridd.lib.items.api.ItemsApi;
 import com.fyxridd.lib.items.api.ItemsPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-public class ItemsMain implements Listener{
-	private static Random r = new Random();
-
+public class ItemsMain{
+    //缓存
+    public static ItemsMain instance;
+    public static ItemsConfig itemsConfig;
     public static GetItemsManager getItemsManager;
     public static ItemsEdit itemsEdit;
 
@@ -33,108 +30,67 @@ public class ItemsMain implements Listener{
 	//插件名 文件名 物品类型名 物品类型
 	private static HashMap<String, HashMap<String, HashMap<String, ItemInfo>>> itemHash = new HashMap<>();
 
+    //临时缓存
 	//'plugin:file:type'
 	private static HashList<String> loading = new HashListImpl<>();
 
 	public ItemsMain() {
+        instance = this;
+
         //初始化配置
         initConfig();
-		//读取配置文件
-		loadConfig();
 
+        itemsConfig = new ItemsConfig();
         getItemsManager = new GetItemsManager();
         itemsEdit = new ItemsEdit();
-		//注册事件
-		Bukkit.getPluginManager().registerEvents(this, ItemsPlugin.instance);
-	}
-
-	@EventHandler(priority=EventPriority.LOW)
-	public void onReloadConfig(ReloadConfigEvent e) {
-		if (e.getPlugin().equals(ItemsPlugin.pn)) {
-            loadConfig();
-        }
 	}
 
     /**
-     * @see com.fyxridd.lib.items.api.ItemsApi#saveItem(org.bukkit.inventory.ItemStack)
+     * @see com.fyxridd.lib.items.api.ItemsApi#reloadItems(String, org.bukkit.configuration.MemorySection)
      */
-    public static String saveItem(ItemStack is) {
-        if (is == null) return null;
+    public void reloadItems(String plugin, MemorySection ms) {
+        if (plugin == null || ms == null) return;
 
-        try {
-            YamlConfiguration config = new YamlConfiguration();
-            saveItemStack(config, "item", is);
-            return config.saveToString();
-        } catch (Exception e) {
-            return null;
-        }
+        //重新读取物品类型
+        loadItemInfo(plugin);
+        //重新读取获取类型
+        loadGetInfo(plugin, ms);
     }
 
     /**
-     * @see com.fyxridd.lib.items.api.ItemsApi#loadItem(String)
-     */
-    public static ItemStack loadItem(String s) {
-        if (s == null) return null;
-
-        try {
-            YamlConfiguration config = new YamlConfiguration();
-            config.loadFromString(s);
-            return loadItemStack((MemorySection) config.get("item"));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * @see com.fyxridd.lib.items.api.ItemsApi#saveItemStack(org.bukkit.configuration.MemorySection, String, org.bukkit.inventory.ItemStack)
-     */
-    public static void saveItemStack(MemorySection ms, String type, ItemStack is) {
-        if (ms == null || type == null || is == null) return;
-
-        if (!is.getType().equals(Material.AIR) && is.getAmount() > 0) ms.createSection(type, is.serialize());
-    }
-
-    /**
-     * @see com.fyxridd.lib.items.api.ItemsApi#loadItemStack(org.bukkit.configuration.MemorySection)
-     */
-    public static ItemStack loadItemStack(MemorySection ms) {
-        if (ms == null) return null;
-
-        try {
-            return ItemStack.deserialize(ms.getValues(true));
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-	/**
 	 * 获取检测成功的物品列表
 	 * @param plugin 插件名,不为null
 	 * @param type 获取类型,不为null
 	 * @return 检测成功的物品列表,出错返回空列表
 	 */
-	public static List<ItemStack> getItems(String plugin, String type) {
+	public List<ItemStack> getItems(String plugin, String type) {
 		List<ItemStack> result = new ArrayList<>();
         if (plugin == null || type == null) return result;
 
-		GetInfo getInfo = getGetInfo(plugin, type);
-		if (getInfo == null) return result;
+        GetInfo getInfo;
+        try {
+            getInfo = getHash.get(plugin).get(type);
+            if (getInfo == null) return result;
+        } catch (Exception e) {
+            return result;
+        }
 		for (GetItem getItem:getInfo.getList()) {
 			ItemInfo itemInfo = getItem.itemInfo;
 			if (itemInfo != null && !itemInfo.getItemList().isEmpty()) {//不为null且有内容
 				if (getItem.method == 1) {//方式一
-					int times = r.nextInt(getItem.maxTimes-getItem.minTimes+1)+getItem.minTimes;
+					int times = CoreApi.Random.nextInt(getItem.maxTimes-getItem.minTimes+1)+getItem.minTimes;
 					if (getItem.all) {//可重复取
 						for (int i=0;i<times;i++) {
-							ItemStack is = itemInfo.getItemList().getRandom().getItem().clone();
-							result.add(is);
+							ItemStack is = itemInfo.getItemList().getRandom().getItem();
+							if (is != null) result.add(is);
 						}
 					}else {//不重复取
                         ChanceHashList<ItemWrapper> list = itemInfo.getItemList().clone();
 						for (int i=0;i<times;i++) {
 							ItemWrapper iw = list.getRandom();
                             list.remove(iw);
-							result.add(iw.getItem().clone());
+                            ItemStack is = iw.getItem();
+                            if (is != null) result.add(is);
                             //已经没有物品了
                             if (list.isEmpty()) break;
 						}
@@ -151,9 +107,10 @@ public class ItemsMain implements Listener{
 						left --;
 						if (sum >= getItem.maxAmount) break;//已经达到最大数量
 						int chance = itemInfo.getItemList().getChance(iw);
-						if (must || (chance > 0 && r.nextInt(getItem.maxChance) < chance)) {
+						if (must || (chance > 0 && CoreApi.Random.nextInt(getItem.maxChance) < chance)) {
 							sum ++;
-							result.add(iw.getItem().clone());
+                            ItemStack is = iw.getItem();
+                            if (is != null) result.add(is);
 						}
 					}
 				}
@@ -163,39 +120,13 @@ public class ItemsMain implements Listener{
 	}
 
 	/**
-     * @see com.fyxridd.lib.items.api.ItemsApi#reloadItems(String, org.bukkit.configuration.MemorySection)
-	 */
-	public static void reloadItems(String plugin, MemorySection ms) {
-        if (plugin == null || ms == null) return;
-
-		//重新读取物品类型
-		reloadItemInfos(plugin);
-		//重新读取获取类型
-		reloadGetInfos(plugin, ms);
-	}
-	
-	/**
-	 * 获取获取信息
-	 * @param plugin 插件名,不为null
-	 * @param type 获取类型名,不为null
-	 * @return 获取类型,不存在返回null
-	 */
-	public static GetInfo getGetInfo(String plugin, String type) {
-		try {
-			return getHash.get(plugin).get(type);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	/**
 	 * 获取指定的物品类型
 	 * @param plugin 插件名,不为null
 	 * @param file 文件名,不为null
 	 * @param type 物品类型名,不为null
 	 * @return 异常返回null
 	 */
-	public static ItemInfo getItemInfo(String plugin, String file, String type) {
+	public ItemInfo getItemInfo(String plugin, String file, String type) {
 		try {
 			return itemHash.get(plugin).get(file).get(type);
 		} catch (Exception e) {
@@ -207,20 +138,20 @@ public class ItemsMain implements Listener{
 	 * 重新读取此插件所有的物品类型
 	 * @param plugin 插件名
 	 */
-	private static void reloadItemInfos(String plugin) {
+	private void loadItemInfo(String plugin) {
 		//物品类型保存的文件夹路径
 		String itemPath = ItemsPlugin.pluginPath+File.separator+plugin+File.separator+"items";
-		File file = new File(itemPath);
-		file.mkdirs();
+		File dir = new File(itemPath);
+		dir.mkdirs();
 		//清空旧的
 		itemHash.remove(plugin);
 		//读取新的
 		HashMap<String, HashMap<String, ItemInfo>> fileHash = new HashMap<>();
-		for (File f:file.listFiles()) {
-			if (f.isFile() && f.canRead() && f.getName().endsWith(".yml")) {
-				String fileName = f.getName().substring(0, f.getName().length()-4).trim();
+		for (File file:dir.listFiles()) {
+			if (file.isFile() && file.canRead() && file.getName().endsWith(".yml")) {
+				String fileName = file.getName().substring(0, file.getName().length()-4).trim();
 				if (!fileName.isEmpty()) {
-					HashMap<String,ItemInfo> typeHash = loadItemInfo(plugin, f, fileName);
+					HashMap<String,ItemInfo> typeHash = loadItemInfo(plugin, file);
 					if (!typeHash.isEmpty()) fileHash.put(fileName, typeHash);
 				}
 			}
@@ -228,13 +159,9 @@ public class ItemsMain implements Listener{
 		if (!fileHash.isEmpty()) {
 			itemHash.put(plugin, fileHash);
 			//更新生成ItemWrappers
-			for (String fileName:fileHash.keySet()) {
-				HashMap<String, ItemInfo> typeHash = fileHash.get(fileName);
-				for (String typeName:typeHash.keySet()) {
-					ItemInfo info = typeHash.get(typeName);
-					info.generateItemWrappers();
-				}
-			}
+            for (HashMap<String, ItemInfo> typeHash:fileHash.values()) {
+                for (ItemInfo info:typeHash.values()) info.generateItemWrappers();
+            }
 		}
 	}
 
@@ -242,10 +169,10 @@ public class ItemsMain implements Listener{
 	 * 从文件中读取"物品类型名 物品类型"列表
 	 * @param plugin 插件名
 	 * @param file 文件
-	 * @param fileName 
 	 * @return 异常返回空的hash
 	 */
-	private static HashMap<String, ItemInfo> loadItemInfo(String plugin, File file, String fileName) {
+	private HashMap<String, ItemInfo> loadItemInfo(String plugin, File file) {
+        String fileName = file.getName().substring(0, file.getName().length()-4).trim();
 		HashMap<String,ItemInfo> typeHash = new HashMap<>();
 		try {
 			YamlConfiguration config = CoreApi.loadConfigByUTF8(file);
@@ -267,11 +194,11 @@ public class ItemsMain implements Listener{
 	 * @param type 物品类型名
 	 * @return 异常返回null
 	 */
-	private static ItemInfo loadItemInfo(String plugin, String file, String type) {
+	private ItemInfo loadItemInfo(String plugin, String file, String type) {
 		try {
 			//已经读取过
-			ItemInfo i = getItemInfo(plugin, file, type);
-			if (i != null) return i;
+			ItemInfo itemInfo = getItemInfo(plugin, file, type);
+			if (itemInfo != null) return itemInfo;
 			//没读取过
 			String check = plugin+":"+file+":"+type;//检测死循环用
 			if (loading.has(check)) return null;//死循环异常
@@ -279,41 +206,45 @@ public class ItemsMain implements Listener{
 			//
 			String itemPath = ItemsPlugin.pluginPath+File.separator+plugin+File.separator+"items"+File.separator+file+".yml";
 			YamlConfiguration config = CoreApi.loadConfigByUTF8(new File(itemPath));
-			//inherits判断
+			//方式判断
 			MemorySection ms = (MemorySection) config.get(type);
-			List<String> list = ms.getStringList("inherits");
-			boolean hasInherits = false;
-			List<InheritItem> inherits = new ArrayList<>();
-			if (list != null) {
-				for (String s:list) {
-					String[] s1 = s.split(" ");
-					if (s1.length > 2) continue;//异常
-					int tarChance;
-					if (s1.length == 1) {
-						tarChance = -1;
-					}else {
-						tarChance = Integer.parseInt(s1[1]);
-					}
-					String[] ss = s1[0].split("\\:");
-					String f,t;
-					if (ss.length == 1) {
-						f = file;
-						t = ss[0];
-					}else if (ss.length == 2) {
-						f = ss[0];
-						t = ss[1];
-					}else continue;//异常
-					ItemInfo info = loadItemInfo(plugin, f, t);
-					if (info == null) continue;
-					InheritItem ii = new InheritItem(plugin, f, t, tarChance);
-					inherits.add(ii);
-					hasInherits = true;
-				}
-			}
-			if (hasInherits) {//方式一
-				return new ItemInfo(type, inherits);
-			}else {//方式二
-				ItemStack is = loadItemStack(ms);
+            if (ms.contains("inherits")) {//方式一
+                List<InheritItem> inherits = new ArrayList<>();
+                for (String s:ms.getStringList("inherits")) {
+                    String[] s1 = s.split(" ");
+                    if (s1.length > 2) continue;//异常
+                    int tarChance;
+                    if (s1.length == 1) {
+                        tarChance = -1;
+                    }else {
+                        tarChance = Integer.parseInt(s1[1]);
+                    }
+                    String[] ss = s1[0].split("\\:");
+                    String f,t;
+                    if (ss.length == 1) {
+                        f = file;
+                        t = ss[0];
+                    }else if (ss.length == 2) {
+                        f = ss[0];
+                        t = ss[1];
+                    }else continue;//异常
+                    ItemInfo info = loadItemInfo(plugin, f, t);
+                    if (info == null) continue;
+                    InheritItem ii = new InheritItem(plugin, f, t, tarChance);
+                    inherits.add(ii);
+                }
+                return new ItemInfo(type, inherits);
+            }else if (ms.contains("getType")) {//方式二
+                int chance = ms.getInt("chance", 1);
+                String[] args = ms.getString("getType").split(" ", 3);
+                String getPlugin = args[0];
+                String getType = args[1];
+                String getArg = args[2];
+                ItemWrapper iw = new ItemWrapper(getPlugin, getType, getArg);
+                //返回
+                return new ItemInfo(type, chance, iw);
+            }else {//方式三
+				ItemStack is = ItemsApi.loadItemStack(ms);
 				if (is == null) return null;
 				int chance = ms.getInt("chance", 1);
 				ItemWrapper iw = new ItemWrapper(is);
@@ -328,7 +259,7 @@ public class ItemsMain implements Listener{
 	/**
 	 * 重新读取此插件所有的获取类型
 	 */
-	private static void reloadGetInfos(String plugin, MemorySection ms) {
+	private void loadGetInfo(String plugin, MemorySection ms) {
 		//清空旧的
 		getHash.remove(plugin);
 		//读取新的
@@ -358,7 +289,7 @@ public class ItemsMain implements Listener{
 	 * @param s 获取项字符串
 	 * @return 异常返回null
 	 */
-	private static GetItem loadGetItem(String plugin, String s) {
+	private GetItem loadGetItem(String plugin, String s) {
 		String[] ss = s.split(" ");
 		if (ss.length != 2) return null;//异常
 
@@ -416,13 +347,4 @@ public class ItemsMain implements Listener{
         ConfigApi.register(ItemsPlugin.file, ItemsPlugin.dataPath, ItemsPlugin.pn);
         ConfigApi.loadConfig(ItemsPlugin.pn);
     }
-
-	private static void loadConfig() {
-        YamlConfiguration config = ConfigApi.getConfig(ItemsPlugin.pn);
-
-        //重新读取物品配置
-        reloadItems(ItemsPlugin.pn, config);
-        //重新读取提示
-        TransactionApi.reloadTips(ItemsPlugin.pn);
-	}
 }

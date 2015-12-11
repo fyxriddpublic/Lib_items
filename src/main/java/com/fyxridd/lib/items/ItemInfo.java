@@ -28,35 +28,50 @@ public class ItemInfo {
 
 		@Override
 		public InheritItem clone() throws CloneNotSupportedException {
-			InheritItem inheritItem = new InheritItem(plugin, file, type, tarChance);
-			return inheritItem;
+			return new InheritItem(plugin, file, type, tarChance);
 		}
 	}
-	//物品类型名
-	private String name;
-	//继承列表,不为null可为空(方式一时不为空,方式二时为空)
-	private List<InheritItem> inherits = new ArrayList<>();
-	//几率
-	private int chance;
-	//物品(方式一时为null,方式二时不为null)
+
+    //方式一
+	//继承列表,不为null可为空
+	private List<InheritItem> inherits;
+
+    //方式二,三
+    //几率
+    private int chance;
+	//物品
 	private ItemWrapper iw;
+
+    //通用
+    //物品类型名
+    private String name;
 	//物品列表,不为null,为空说明未生成物品列表
 	private ChanceHashList<ItemWrapper> itemList = new ChanceHashListImpl<>();
 	//其它属性,不为null
 	private HashMap<String, Object> properties = new HashMap<>();
 
+    /**
+     * 方式一
+     */
 	public ItemInfo(String name, List<InheritItem> inherits) {
 		super();
 		this.name = name;
 		this.inherits = inherits;
 	}
 
+    /**
+     * 方式二,三
+     */
 	public ItemInfo(String name, int chance, ItemWrapper iw) {
+        this.inherits = new ArrayList<>();
 		this.name = name;
 		this.chance = chance;
 		this.iw = iw;
 	}
 
+    /**
+     * clone用
+     */
 	public ItemInfo(String name, List<InheritItem> inherits, int chance,
 			ItemWrapper iw, ChanceHashList<ItemWrapper> itemList,
 			HashMap<String, Object> properties) {
@@ -99,7 +114,7 @@ public class ItemInfo {
 	public void generateItemWrappers() {
 		//继承
 		for (InheritItem ii:inherits) {
-			ItemInfo info = ItemsMain.getItemInfo(ii.plugin, ii.file, ii.type);
+            ItemInfo info = ItemsMain.instance.getItemInfo(ii.plugin, ii.file, ii.type);
 			if (info.getItemList().isEmpty()) info.generateItemWrappers();
 			ChanceHashList<ItemWrapper> list = info.getItemList().clone();
             if (ii.tarChance != -1) list.updateTotalChance(ii.tarChance);
