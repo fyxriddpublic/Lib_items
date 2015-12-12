@@ -239,7 +239,7 @@ public class ItemsMain{
                 String[] args = ms.getString("getType").split(" ", 3);
                 String getPlugin = args[0];
                 String getType = args[1];
-                String getArg = args[2];
+                String getArg = args.length >= 3?args[2]:null;
                 ItemWrapper iw = new ItemWrapper(getPlugin, getType, getArg);
                 //返回
                 return new ItemInfo(type, chance, iw);
