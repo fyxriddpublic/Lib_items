@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class GetItemsManager {
     //缓存
+
+    //插件名 类型名 获取器
     private HashMap<String, HashMap<String, GetItemsHandler>> handlers = new HashMap<>();
 
     /**

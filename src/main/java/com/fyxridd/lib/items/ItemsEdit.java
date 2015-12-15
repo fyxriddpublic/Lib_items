@@ -13,7 +13,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ItemsEdit implements FunctionInterface {
     private static final String FUNC_NAME = "ItemsEdit";
@@ -45,11 +47,21 @@ public class ItemsEdit implements FunctionInterface {
     /**
      * 'a true/false' 打开物品编辑框,true/false表示是否重置
      * 'b 类型名 true/false' 保存类型,true/false表示是否强制保存
+     * 'c 插件名 获取类型名' 获取物品
+     * 'd 插件名 文件名 物品类型名' 获取静态物品
+     * 'e 插件名 类型名 [变量]' 获取动态物品
      */
     @Override
     public void onOperate(Player p, String... args) {
         if (args.length > 0) {
             try {
+                if (args.length >= 3) {
+                    if (args[0].equalsIgnoreCase("e")) {
+                        getDynamicItems(p, args[1], args[2], args.length > 3 ? CoreApi.combine(args, " ", 3, args.length):null);
+                        return;
+                    }
+                }
+
                 switch (args.length) {
                     case 2:
                         if (args[0].equalsIgnoreCase("a")) {
@@ -64,6 +76,15 @@ public class ItemsEdit implements FunctionInterface {
                             boolean force = Boolean.parseBoolean(args[2]);
                             save(p, type, force);
                             return;
+                        }else if (args[0].equalsIgnoreCase("c")) {
+                            getItems(p, args[1], args[2]);
+                            return;
+                        }
+                        break;
+                    case 4:
+                        if (args[0].equalsIgnoreCase("d")) {
+                            getStaticItems(p, args[1], args[2], args[3]);
+                            return;
                         }
                         break;
                 }
@@ -76,7 +97,7 @@ public class ItemsEdit implements FunctionInterface {
         }
     }
 
-	/**
+    /**
      * @see com.fyxridd.lib.items.api.ItemsApi#getInv(String, boolean)
 	 */
 	public static Inventory getInv(String name, boolean create) {
@@ -144,6 +165,64 @@ public class ItemsEdit implements FunctionInterface {
         if (CoreApi.saveConfigByUTF8(saveConfig, file)) ShowApi.tip(p, FormatApi.get(ItemsPlugin.pn, 60), true);
         else ShowApi.tip(p, FormatApi.get(ItemsPlugin.pn, 65), true);
 	}
+
+    private void getItems(Player p, String plugin, String getType) {
+        //检测权限
+        if (!PerApi.checkPer(p, ItemsConfig.editPer)) return;
+
+        //获取物品列表
+        List<ItemStack> list = ItemsApi.getItems(plugin, getType);
+
+        //添加物品
+        p.getInventory().addItem(list.toArray(new ItemStack[list.size()]));
+
+        //延时更新背包
+        CoreApi.updateInventoryDelay(p);
+
+        //提示
+        ShowApi.tip(p, get(120), true);
+    }
+
+    private void getDynamicItems(Player p, String plugin, String type, String arg) {
+        //检测权限
+        if (!PerApi.checkPer(p, ItemsConfig.editPer)) return;
+
+        //获取物品列表
+        List<ItemStack> list = ItemsApi.getItems(plugin, type, arg);
+
+        //添加物品
+        p.getInventory().addItem(list.toArray(new ItemStack[list.size()]));
+
+        //延时更新背包
+        CoreApi.updateInventoryDelay(p);
+
+        //提示
+        ShowApi.tip(p, get(120), true);
+    }
+
+    private void getStaticItems(Player p, String plugin, String file, String type) {
+        //检测权限
+        if (!PerApi.checkPer(p, ItemsConfig.editPer)) return;
+
+        //获取物品列表
+        List<ItemStack> list = new ArrayList<>();
+        ItemInfo itemInfo = ItemsMain.instance.getItemInfo(plugin, file, type);
+        if (itemInfo != null) {
+            for (ItemWrapper iw:itemInfo.getItemList()) {
+                ItemStack is = iw.getItem();
+                if (is != null) list.add(is);
+            }
+        }
+
+        //添加物品
+        p.getInventory().addItem(list.toArray(new ItemStack[list.size()]));
+
+        //延时更新背包
+        CoreApi.updateInventoryDelay(p);
+
+        //提示
+        ShowApi.tip(p, get(120), true);
+    }
 
     private FancyMessage get(int id, Object... args) {
         return FormatApi.get(ItemsPlugin.pn, id, args);

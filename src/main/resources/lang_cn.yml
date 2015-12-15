@@ -42,3 +42,4 @@ info-110:
     text: "[取消]"
     color: "7"
     onClick: "cmd /f tm c"
+show-120: "&a获取物品成功."
